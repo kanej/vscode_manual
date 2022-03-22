@@ -15,7 +15,7 @@ contract Box is Ownable {
     }
 
     function store(uint256 value) public {
-        require(_auth.isAdministrator3(msg.sender), "Unauthorized");
+        require(_auth.isAdministrator(msg.sender), "Unauthorized");
 
         _value = value;
         console.log(value);

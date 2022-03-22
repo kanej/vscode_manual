@@ -10,7 +10,7 @@ contract Auth {
         _administrator = deployer;
     }
 
-    function isAdministrator3(address user) public view returns (bool) {
+    function isAdministrator(address user) public view returns (bool) {
         return user == _administrator;
     }
 }

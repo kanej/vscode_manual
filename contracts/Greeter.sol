@@ -19,7 +19,7 @@ contract Greeter is Ownable {
     }
 
     function setGreeting(string memory _greeting) public {
-        require(_auth.isAdministrator3(msg.sender), "Unauthorized");
+        require(_auth.isAdministrator(msg.sender), "Unauthorized");
         console.log("Changing greeting from '%s' to '%s'", greeting, _greeting);
 
         greeting = _greeting;
