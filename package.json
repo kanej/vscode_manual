@@ -1,5 +1,6 @@
 {
-  "name": "hardhat-project",
+  "name": "smoke-tests-vscode",
+  "private": true,
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "2.0.5",
     "@nomiclabs/hardhat-etherscan": "2.1.8",
