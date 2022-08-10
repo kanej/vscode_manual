@@ -1,46 +1,40 @@
-# Advanced Sample Hardhat Project
+# Hardhat for Visual Studio Code Smoke Tests
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
+Release prep for *Hardhat for Visual Studio Code* involves running through manual tests from this repo on multiple os. This is to support our integration tests and provide a final sanity check that core functionality is working on different platforms.
 
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
+*Hardhat for Visual Studio Code* is tested against:
 
-Try running some of the following tasks:
+- Mac OS X
+- Windows
+- Remote containers with docker as the backing
+
+## Manual Test Run
+
+Install the Release Candidate vsix file into your local instance of vscode on one of the test platforms (i.e. windows). Open this repo within vscode and install the dependencies:
 
 ```shell
-npx hardhat accounts
+yarn
+```
+
+Confirm that the contracts build cleanly at the command line:
+
+```shell
 npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-npx hardhat help
-REPORT_GAS=true npx hardhat test
-npx hardhat coverage
-npx hardhat run scripts/deploy.ts
-TS_NODE_FILES=true npx ts-node scripts/deploy.ts
-npx eslint '**/*.{js,ts}'
-npx eslint '**/*.{js,ts}' --fix
-npx prettier '**/*.{json,sol,md}' --check
-npx prettier '**/*.{json,sol,md}' --write
-npx solhint 'contracts/**/*.sol'
-npx solhint 'contracts/**/*.sol' --fix
 ```
 
-# Etherscan verification
+You should see one warning that a contract is too large to deploy to mainnet.
 
-To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
+Any new features or bugs that constitute the release should be checked.
 
-In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
+To sanity check core functionality:
 
-```shell
-hardhat run --network ropsten scripts/sample-script.ts
-```
-
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
-
-```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
-```
-
-# Performance optimizations
-
-For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
+- function signature quickfixes: open [Quickfix.sol](./contracts/Quickfix.sol), and remove the function signature keyword until you have tested:
+    * Constrain mutability by adding view/pure to function signature
+    * Meet inheritance requirements by adding virtual/override on function signature
+    * Provide accessibility by adding public/private to function signature
+- Implement interface quickfix: open [CodeCoin.sol](./contracts/CodeCoin.sol), delete the contract and import statement:
+    * add back the openzepplin IERC20 import checking code completion
+    * add `contract CodeCoin is IERC20 {}` to the body and confirm the `implement interface` quickfix is working
+- Single file rename: open [Rename](./contracts/Rename.sol), rename the `complete` signature and confirm all usages are updated
+- Multi file rename: confirm `npx hardhat compile`, open [Greeter.sol](./contracts/Greeter.sol), rename the `Auth` contract, confirm `npx hardhat compile` still works
+- Imports: check import line errors by opening [404-non-existant.sol](./contracts/imports/404-non-existant.sol) and uncommenting the import line, a 404 error should be reported inline. Add the comment back and check the other imports.

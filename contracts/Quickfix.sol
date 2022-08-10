@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./access/Auth.sol";
-
 abstract contract Animal {
     function speak() public virtual returns (string memory) {}
 }
